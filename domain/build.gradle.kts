@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.vik.trials.domain"
+    namespace = "ru.vik.trials.pokemon.domain"
     compileSdk = 36
 
     defaultConfig {
@@ -33,6 +33,11 @@ android {
 }
 
 dependencies {
+
+    // Dependency injection
+    implementation(libs.hilt.android)
+
+    implementation(libs.androidx.paging.common)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

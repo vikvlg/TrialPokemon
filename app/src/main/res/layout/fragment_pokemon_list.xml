@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.list.PokemonListFragment">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable name="viewModel" type="ru.vik.trials.pokemon.ui.list.PokemonListViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/searching_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:autofillHints="@string/pokemon_search_name"
+                    android:ems="10"
+                    android:hint="@string/pokemon_search_name"
+                    android:inputType="text"
+                    android:text="@={viewModel.searchName}" />
+
+                <ImageButton
+                    android:id="@+id/search_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:backgroundTint="?android:attr/windowBackground"
+                    android:contentDescription="@string/pokemon_search"
+                    android:src="@android:drawable/ic_menu_search"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pokemon_list_empty"
+                android:textAlignment="center"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/characters_loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pokemon_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

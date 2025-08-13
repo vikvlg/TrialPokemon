@@ -36,14 +36,26 @@ android {
         jvmTarget = "18"
     }
     buildFeatures {
+        dataBinding = true
+        viewBinding = true
     }
 }
 
 dependencies {
 
+    implementation(project(":domain"))
+    implementation(project(":data"))
+
     // Dependency injection
     implementation(libs.hilt.android)
+    implementation(libs.androidx.coordinatorlayout)
+    implementation(libs.material)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui.ktx)
     ksp(libs.hilt.compiler)
+
+    implementation(libs.androidx.paging.common)
+    implementation(libs.androidx.paging.runtime)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
