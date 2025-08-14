@@ -2,21 +2,30 @@ package ru.vik.trials.pokemon.ui.list
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
+import android.view.Gravity
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vik.trials.pokemon.R
 import ru.vik.trials.pokemon.databinding.FragmentPokemonListBinding
 import ru.vik.trials.pokemon.domain.entities.Pokemon
 import ru.vik.trials.pokemon.ui.common.CommonLoadStateAdapter
+import ru.vik.trials.pokemon.ui.common.Consts
+import ru.vik.trials.pokemon.ui.common.ItemClickSupport
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -72,6 +81,23 @@ class PokemonListFragment
             adapter.submitData(lifecycle, it)
         })
 
+        // Обработчики поиска покемона
+        binding.searchName.setOnClickListener {
+            doSearchClick()
+        }
+        binding.searchingName.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                doSearchClick()
+                return@OnKeyListener true
+            }
+            false
+        })
+
+        // Обработчик нажатия по персонажу
+        with(ItemClickSupport.addTo(binding.pokemonList)) {
+            setOnItemClickListener { _, position, _ -> doPokemonClick(position) }
+        }
+
         return binding.root
     }
 
@@ -80,5 +106,33 @@ class PokemonListFragment
 
         // Данные запрашиваем здесь, чтобы успел среагировать FragmentResultListener.
         viewModel.refresh()
+    }
+
+    /** Ищет следующего персонажа */
+    private fun doSearchClick() {
+        val position = adapter.searchItemPosition(viewModel.searchName.get() ?: "")
+        if (position == -1) {
+            Toast.makeText(context, resources.getString(R.string.pokemon_search_done), Toast.LENGTH_SHORT).apply {
+                setGravity(Gravity.TOP, 0, 16)
+                show()
+            }
+        }
+        else
+            binding.pokemonList.layoutManager?.scrollToPosition(position)
+    }
+
+    /**
+     * Обработчик клика по покемону.
+     *
+     * Переход к фрагменту с детализацией персонажа.
+     * */
+    private fun doPokemonClick(position: Int) {
+        Log.d(TAG, "doClick at $position")
+        val id = adapter.getIdByPosition(position)
+        if (id == RecyclerView.NO_ID.toInt())
+            return
+
+        val navController = NavHostFragment.findNavController(this)
+        navController.navigate(R.id.PokemonDetailsFragment, bundleOf(Consts.KEY_POKEMON_ID to id))
     }
 }
