@@ -9,12 +9,13 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vik.trials.pokemon.databinding.FragmentPokemonListBinding
-import ru.vik.trials.pokemon.domain.entities.BasePokemon
+import ru.vik.trials.pokemon.domain.entities.Pokemon
 import ru.vik.trials.pokemon.ui.common.CommonLoadStateAdapter
 import javax.inject.Inject
 
@@ -39,6 +40,7 @@ class PokemonListFragment
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPokemonListBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
+        adapter.scope = lifecycleScope
 
         val concatAdapter = adapter.withLoadStateFooter(
             footer = CommonLoadStateAdapter {
@@ -65,7 +67,7 @@ class PokemonListFragment
             }
         }
 
-        viewModel.pokemonList.observe(viewLifecycleOwner, Observer<PagingData<BasePokemon>> {
+        viewModel.pokemonList.observe(viewLifecycleOwner, Observer<PagingData<Pokemon>> {
             Log.d(TAG, "pokemonList observe")
             adapter.submitData(lifecycle, it)
         })

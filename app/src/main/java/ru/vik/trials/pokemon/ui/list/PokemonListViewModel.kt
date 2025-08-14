@@ -11,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.vik.trials.pokemon.domain.GetPokemonListUseCase
-import ru.vik.trials.pokemon.domain.entities.BasePokemon
+import ru.vik.trials.pokemon.domain.entities.Pokemon
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +24,7 @@ class PokemonListViewModel @Inject constructor(
     }
 
     /** Список покемонов. */
-    var pokemonList: MutableLiveData<PagingData<BasePokemon>> = MutableLiveData()
+    var pokemonList: MutableLiveData<PagingData<Pokemon>> = MutableLiveData()
 
     /** Фрагмент имени покемона для поиска. */
     val searchName = ObservableField("")
