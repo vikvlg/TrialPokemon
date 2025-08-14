@@ -6,9 +6,14 @@
     <string name="pokemon_search_name">Поиск по имени</string>
     <string name="pokemon_search">Поиск покемона по имени</string>
     <string name="pokemon_list_empty">Нет покемонов</string>
+    <string name="pokemon_search_done">Поиск закончен</string>
 
     <string name="pokemon_list_fragment_label">Список покемонов</string>
+    <string name="pokemon_details_fragment_label">Покемон</string>
 
     <string name="pokemon_list_error">Ошибка</string>
     <string name="pokemon_list_retry">Повторить</string>
+
+    <string name="pokemon_type">Тип</string>
+
 </resources>

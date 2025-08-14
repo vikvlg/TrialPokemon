@@ -11,5 +11,11 @@
         android:label="@string/pokemon_list_fragment_label"
         tools:layout="@layout/fragment_pokemon_list">
     </fragment>
+    <fragment
+        android:id="@+id/PokemonDetailsFragment"
+        android:name="ru.vik.trials.pokemon.ui.details.PokemonDetailsFragment"
+        android:label="@string/pokemon_details_fragment_label"
+        tools:layout="@layout/fragment_pokemon_details">
+    </fragment>
 
 </navigation>
