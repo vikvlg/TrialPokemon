@@ -8,7 +8,8 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import retrofit2.HttpException
 import ru.vik.trials.pokemon.data.local.AppDatabase
-import ru.vik.trials.pokemon.data.local.model.Pokemon
+import ru.vik.trials.pokemon.data.local.model.PokemonBase
+import ru.vik.trials.pokemon.data.local.model.PokemonTuple
 import ru.vik.trials.pokemon.data.remote.PokemonApi
 import java.io.IOException
 import javax.inject.Inject
@@ -19,7 +20,7 @@ private const val BASE_STARTING_PAGE_INDEX = 1
 internal class PokemonListRemoteMediator @Inject constructor(
     private val service: PokemonApi,
     private val database: AppDatabase,
-) : RemoteMediator<Int, Pokemon>() {
+) : RemoteMediator<Int, PokemonTuple>() {
     companion object {
         private const val PAGE_SIZE = PokemonApi.PAGE_SIZE
     }
@@ -29,7 +30,7 @@ internal class PokemonListRemoteMediator @Inject constructor(
         return super.initialize()
     }
 
-    override suspend fun load(loadType: LoadType, state: PagingState<Int, Pokemon>): MediatorResult {
+    override suspend fun load(loadType: LoadType, state: PagingState<Int, PokemonTuple>): MediatorResult {
         Log.d("TAG", "RemoteMediator load; loadType: $loadType")
         return try {
             val pageNumber =
@@ -75,15 +76,17 @@ internal class PokemonListRemoteMediator @Inject constructor(
             val response = service.getPokemonList((pageNumber - 1) * PAGE_SIZE, PAGE_SIZE)
             val data = response.body() ?: return MediatorResult.Error(Exception("No data"))
             // Запишем полученные данные в БД
+            Log.d("TAG", "PokemonBase insert...")
             database.withTransaction {
                 val dao = database.getPokemonDao()
                 for (pokemon in data.results) {
                     // TRICKY: Т.к. API не возвращает идентификатор, будем выдергиваеть его из ссылки.
                     val id = pokemon.url.split('/').last { !it.isBlank() }
                     //Log.d("TAG", "pokemon: [$id] ${pokemon.name} from ${pokemon.url}")
-                    dao.insert(Pokemon(id.toInt(), pokemon.name, pokemon.url))
+                    dao.insert(PokemonBase(id.toInt(), pokemon.name, pokemon.url))
                 }
             }
+            Log.d("TAG", "PokemonBase insert...")
 
             // Установим флаг, есть ли еще данные в API
             val endOfPaginationReached = data.next.isNullOrEmpty()
