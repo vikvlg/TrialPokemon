@@ -17,4 +17,5 @@ internal data class PokemonDetails(
     /** Идентификатор. */
     @PrimaryKey val pokemonId: Int,
     val sprite: String,
+    val types: String,
 )

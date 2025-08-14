@@ -24,7 +24,7 @@ internal interface PokemonDao {
     fun insertAll(list: List<PokemonBase>)
 
     @Query("Select * From pokemon Where id = :id")
-    fun get(id: Int): PokemonBase?
+    fun get(id: Int): PokemonTuple?
 
 //    @Query("Select * From pokemon Where name = :name")
 //    fun get(name: String): PokemonBase?

@@ -23,6 +23,4 @@ internal data class PokemonBase(
 
     /** Ссылка для получения детализации по покемону. */
     val url: String,
-
-    val sprite: String? = null
 )

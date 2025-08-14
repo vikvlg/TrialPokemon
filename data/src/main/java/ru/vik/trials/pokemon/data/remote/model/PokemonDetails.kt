@@ -12,9 +12,9 @@ internal class PokemonDetails(
 
     class Sprites(
         @SerializedName("back_default")
-        val backDefault: String,
+        val backDefault: String?,
         @SerializedName("front_default")
-        val frontDefault: String
+        val frontDefault: String?
     )
 
     class Stat(
