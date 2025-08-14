@@ -26,12 +26,12 @@ internal class PokemonListRemoteMediator @Inject constructor(
     }
 
     override suspend fun initialize(): InitializeAction {
-        Log.d("TAG", "RemoteMediator initialize")
+        Log.d("TAG", "[${Thread.currentThread().name}] RemoteMediator initialize")
         return super.initialize()
     }
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, PokemonTuple>): MediatorResult {
-        Log.d("TAG", "RemoteMediator load; loadType: $loadType")
+        Log.d("TAG", "[${Thread.currentThread().name}] RemoteMediator load; loadType: $loadType")
         return try {
             val pageNumber =
                 when (loadType) {
@@ -59,11 +59,15 @@ internal class PokemonListRemoteMediator @Inject constructor(
                             BASE_STARTING_PAGE_INDEX
                         }
                         else {
+                            // В БД еще есть данные, ничего не делаем
+                            if (page.itemsAfter > PAGE_SIZE)
+                                return MediatorResult.Success(endOfPaginationReached = false)
+
                             val loadedItems = page.itemsBefore + page.data.size + page.itemsAfter
                             loadedItems / PAGE_SIZE + 1
                         }
 
-                        // Если в БД есть подходящие данные, то ничего не делаем
+                        // Специальная проверка для первой страницы
                         if (pageNumber == BASE_STARTING_PAGE_INDEX && getDbPokemonCount() >= PAGE_SIZE)
                             return MediatorResult.Success(endOfPaginationReached = false)
 
