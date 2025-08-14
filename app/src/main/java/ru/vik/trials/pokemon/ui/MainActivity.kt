@@ -19,8 +19,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject lateinit var getPokemonListUseCase: GetPokemonListUseCase
-
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -39,11 +37,10 @@ class MainActivity : AppCompatActivity() {
 //        navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+    }
 
-        lifecycleScope.launch {
-            getPokemonListUseCase().collect { pagingData ->
-                Log.d("TAG", "collect; it: $pagingData")
-            }
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        // Без этого не работает навигация назад
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
