@@ -48,11 +48,9 @@ dependencies {
 
     // Dependency injection
     implementation(libs.hilt.android)
-    implementation(libs.androidx.coordinatorlayout)
-    implementation(libs.material)
-    implementation(libs.androidx.navigation.fragment)
-    implementation(libs.androidx.navigation.ui.ktx)
     ksp(libs.hilt.compiler)
+
+    implementation(libs.glide)
 
     implementation(libs.androidx.paging.common)
     implementation(libs.androidx.paging.runtime)
@@ -60,6 +58,10 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.coordinatorlayout)
+    implementation(libs.material)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
