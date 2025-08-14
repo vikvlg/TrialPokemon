@@ -17,5 +17,11 @@
         android:label="@string/pokemon_details_fragment_label"
         tools:layout="@layout/fragment_pokemon_details">
     </fragment>
+    <fragment
+        android:id="@+id/FilterFragment"
+        android:name="ru.vik.trials.pokemon.ui.filters.FiltersFragment"
+        android:label="@string/filter_fragment_label"
+        tools:layout="@layout/fragment_filters">
+    </fragment>
 
 </navigation>

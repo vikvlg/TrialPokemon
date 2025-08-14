@@ -11,16 +11,16 @@ import ru.vik.trials.pokemon.data.local.model.PokemonTuple
 
 @Dao
 internal interface PokemonDao {
-    @Insert(entity = PokemonBase::class, onConflict = OnConflictStrategy.REPLACE)
+    @Insert(entity = PokemonBase::class, onConflict = OnConflictStrategy.IGNORE)
     fun insert(pokemon: PokemonBase)
 
 //    @Query("Insert Into pokemon (name, url) Values (:name, :url)")
 //    fun insert(name: String, url: String)
 
-    @Insert(entity = PokemonDetails::class, onConflict = OnConflictStrategy.REPLACE)
+    @Insert(entity = PokemonDetails::class, onConflict = OnConflictStrategy.IGNORE)
     fun insert(pokemon: PokemonDetails)
 
-    @Insert(entity = PokemonBase::class, onConflict = OnConflictStrategy.REPLACE)
+    @Insert(entity = PokemonBase::class, onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(list: List<PokemonBase>)
 
     @Query("Select * From pokemon Where id = :id")

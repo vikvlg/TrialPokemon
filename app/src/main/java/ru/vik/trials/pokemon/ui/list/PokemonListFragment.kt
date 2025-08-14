@@ -1,17 +1,25 @@
 package ru.vik.trials.pokemon.ui.list
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -26,6 +34,7 @@ import ru.vik.trials.pokemon.domain.entities.Pokemon
 import ru.vik.trials.pokemon.ui.common.CommonLoadStateAdapter
 import ru.vik.trials.pokemon.ui.common.Consts
 import ru.vik.trials.pokemon.ui.common.ItemClickSupport
+import ru.vik.trials.pokemon.ui.model.FilterData
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -40,13 +49,34 @@ class PokemonListFragment
     private val viewModel: PokemonListViewModel by viewModels()
     @Inject lateinit var adapter: PokemonListAdapter
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setHasOptionsMenu(true)
+
+        // Слушатель изменения фильтров
+        setFragmentResultListener(Consts.KEY_FILTER_DATA) { _, bundle ->
+            val filter =
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU)
+                    @Suppress("DEPRECATION")
+                    bundle.getParcelable(Consts.KEY_FILTER_DATA)
+                else
+                    bundle.getParcelable(Consts.KEY_FILTER_DATA, FilterData::class.java)
+
+            if (filter != null) {
+                if (filter == viewModel.filter) {
+                    Log.d(TAG, "filter data no change: ${viewModel.filter} = $filter")
+                }
+                else {
+                    Log.d(TAG, "new filter data: ${viewModel.filter} -> $filter")
+                    Log.d("TAG", "   filter.typeMap: ${filter.typeMap}")
+                    viewModel.filter = filter
+                    viewModel.refresh()
+                }
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        addMenu()
         binding = FragmentPokemonListBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         adapter.scope = lifecycleScope
@@ -108,6 +138,27 @@ class PokemonListFragment
         viewModel.refresh()
     }
 
+    private fun addMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.menu_pokemon_list, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Handle the menu selection
+                return when (menuItem.itemId) {
+                    R.id.action_filters -> {
+                        doFiltersClick()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
     /** Ищет следующего персонажа */
     private fun doSearchClick() {
         val position = adapter.searchItemPosition(viewModel.searchName.get() ?: "")
@@ -135,4 +186,10 @@ class PokemonListFragment
         val navController = NavHostFragment.findNavController(this)
         navController.navigate(R.id.PokemonDetailsFragment, bundleOf(Consts.KEY_POKEMON_ID to id))
     }
+
+    private fun doFiltersClick() {
+        val navController = NavHostFragment.findNavController(this)
+        navController.navigate(R.id.FilterFragment, bundleOf(Consts.KEY_FILTER_DATA to viewModel.filter))
+    }
+
 }

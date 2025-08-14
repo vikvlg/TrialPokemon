@@ -49,12 +49,10 @@ internal class PokemonListRemoteMediator @Inject constructor(
                         return MediatorResult.Success(endOfPaginationReached = false)
                     }
                     LoadType.APPEND -> {
-                        Log.d("CharactersRemoteMediator", "   APPEND state: $state")
-                        //++lastPage
-
                         // Узнаем сколько уже данных загружено и
                         // определим какую следующую страницу необходимо подгрузить
                         val page = state.pages.lastOrNull()
+                        Log.d("CharactersRemoteMediator", "   APPEND lastPage: $page")
                         val pageNumber = if (page == null) {
                             BASE_STARTING_PAGE_INDEX
                         }
@@ -80,7 +78,7 @@ internal class PokemonListRemoteMediator @Inject constructor(
             val response = service.getPokemonList((pageNumber - 1) * PAGE_SIZE, PAGE_SIZE)
             val data = response.body() ?: return MediatorResult.Error(Exception("No data"))
             // Запишем полученные данные в БД
-            Log.d("TAG", "PokemonBase insert...")
+            Log.d("TAG", "PokemonBase insert[${data.results.size}]...")
             database.withTransaction {
                 val dao = database.getPokemonDao()
                 for (pokemon in data.results) {
@@ -90,7 +88,7 @@ internal class PokemonListRemoteMediator @Inject constructor(
                     dao.insert(PokemonBase(id.toInt(), pokemon.name, pokemon.url))
                 }
             }
-            Log.d("TAG", "PokemonBase insert...")
+            Log.d("TAG", "PokemonBase insert.OK")
 
             // Установим флаг, есть ли еще данные в API
             val endOfPaginationReached = data.next.isNullOrEmpty()

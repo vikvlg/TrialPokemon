@@ -17,15 +17,20 @@ class PokemonDetailsViewModel @Inject constructor(
     private val getPokemonUseCase: GetPokemonUseCase
 ): ViewModel() {
 
+    companion object {
+        private const val TAG = "PokemonDetailsViewModel"
+    }
+
+
     var id: Int = -1
     val name = ObservableField("")
     val details = ObservableField(PokemonDetails())
 
     fun refresh(id: Int) {
-        Log.d("TAG", "PokemonDetailsViewModel refresh")
+        Log.d(TAG, "refresh")
         viewModelScope.launch(Dispatchers.IO) {
             getPokemonUseCase(id).collectLatest { resp ->
-                Log.d("TAG", "PokemonDetailsViewModel getPokemonUseCase collect")
+                Log.d(TAG, "getPokemonUseCase collect")
                 val pokemon = resp.value
                 if (!resp.isSuccess || pokemon == null) {
                     //name.set("Error: ${resp.error}")

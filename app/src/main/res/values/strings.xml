@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">TrialPokemon</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_filters">Фильтры</string>
 
     <string name="pokemon_search_name">Поиск по имени</string>
     <string name="pokemon_search">Поиск покемона по имени</string>
@@ -10,10 +9,16 @@
 
     <string name="pokemon_list_fragment_label">Список покемонов</string>
     <string name="pokemon_details_fragment_label">Покемон</string>
+    <string name="filter_fragment_label">Фильтры</string>
 
     <string name="pokemon_list_error">Ошибка</string>
     <string name="pokemon_list_retry">Повторить</string>
 
     <string name="pokemon_type">Тип</string>
+
+    <string name="filter_name">Имя:</string>
+    <string name="filter_type">Тип:</string>
+    <string name="filter_name_descr">Имя покемона</string>
+    <string name="filter_type_descr">Тип покемона</string>
 
 </resources>
