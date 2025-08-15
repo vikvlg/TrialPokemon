@@ -16,6 +16,7 @@ import javax.inject.Inject
 
 private const val BASE_STARTING_PAGE_INDEX = 1
 
+/** Постраничный загрузчик данных из API в кеш программы. */
 @OptIn(ExperimentalPagingApi::class)
 internal class PokemonListRemoteMediator @Inject constructor(
     private val service: PokemonApi,
@@ -23,15 +24,17 @@ internal class PokemonListRemoteMediator @Inject constructor(
 ) : RemoteMediator<Int, PokemonTuple>() {
     companion object {
         private const val PAGE_SIZE = PokemonApi.PAGE_SIZE
+
+        private const val TAG = "PokemonListRemoteMediator"
     }
 
     override suspend fun initialize(): InitializeAction {
-        Log.d("TAG", "[${Thread.currentThread().name}] RemoteMediator initialize")
+        //Log.d(TAG, "[${Thread.currentThread().name}] RemoteMediator initialize")
         return super.initialize()
     }
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, PokemonTuple>): MediatorResult {
-        Log.d("TAG", "[${Thread.currentThread().name}] RemoteMediator load; loadType: $loadType")
+        //Log.d(TAG, "[${Thread.currentThread().name}] RemoteMediator load; loadType: $loadType")
         return try {
             val pageNumber =
                 when (loadType) {
@@ -52,7 +55,7 @@ internal class PokemonListRemoteMediator @Inject constructor(
                         // Узнаем сколько уже данных загружено и
                         // определим какую следующую страницу необходимо подгрузить
                         val page = state.pages.lastOrNull()
-                        Log.d("CharactersRemoteMediator", "   APPEND lastPage: $page")
+                        //Log.d(TAG, "   APPEND lastPage: $page")
                         val pageNumber = if (page == null) {
                             BASE_STARTING_PAGE_INDEX
                         }
@@ -74,21 +77,22 @@ internal class PokemonListRemoteMediator @Inject constructor(
                 }
 
             // Загрузим данные из API
-            Log.d("CharactersRemoteMediator", "   !!!!!!!!loadKey: $pageNumber")
+            //Log.d(TAG, "   pageNumber: $pageNumber")
             val response = service.getPokemonList((pageNumber - 1) * PAGE_SIZE, PAGE_SIZE)
             val data = response.body() ?: return MediatorResult.Error(Exception("No data"))
+
             // Запишем полученные данные в БД
-            Log.d("TAG", "PokemonBase insert[${data.results.size}]...")
+            //Log.d(TAG, "PokemonBase insert[${data.results.size}]...")
             database.withTransaction {
                 val dao = database.getPokemonDao()
                 for (pokemon in data.results) {
-                    // TRICKY: Т.к. API не возвращает идентификатор, будем выдергиваеть его из ссылки.
+                    // TRICKY: Т.к. API не возвращает идентификатор, будем выдергивать его из ссылки.
                     val id = pokemon.url.split('/').last { !it.isBlank() }
-                    //Log.d("TAG", "pokemon: [$id] ${pokemon.name} from ${pokemon.url}")
+                    //Log.d(TAG, "pokemon: [$id] ${pokemon.name} from ${pokemon.url}")
                     dao.insert(PokemonBase(id.toInt(), pokemon.name, pokemon.url))
                 }
             }
-            Log.d("TAG", "PokemonBase insert.OK")
+            //Log.d(TAG, "PokemonBase insert.OK")
 
             // Установим флаг, есть ли еще данные в API
             val endOfPaginationReached = data.next.isNullOrEmpty()
@@ -100,6 +104,7 @@ internal class PokemonListRemoteMediator @Inject constructor(
         }
     }
 
+    /** Возвращает общее количество записей в кеше. */
     suspend fun getDbPokemonCount(): Int {
         return database.withTransaction {
             database.getPokemonDao().getCount()

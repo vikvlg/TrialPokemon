@@ -16,6 +16,7 @@ import ru.vik.trials.pokemon.domain.entities.Pokemon
 import ru.vik.trials.pokemon.domain.entities.Resp
 import javax.inject.Inject
 
+/** Репозиторий по работе с покемонами. */
 @OptIn(ExperimentalPagingApi::class)
 class PokemonRepositoryImpl @Inject internal constructor(
     private val service: PokemonApi,
@@ -23,10 +24,11 @@ class PokemonRepositoryImpl @Inject internal constructor(
 ) : PokemonRepository {
     companion object {
         private const val HTTP_ERROR_UNKNOWN = 308
+        private const val TAG = "PokemonRepository"
     }
 
     override fun getPokemonList(): Flow<PagingData<Pokemon>> {
-        Log.d("TAG", "[${Thread.currentThread().name}] getPokemonList")
+        //Log.d(TAG, "[${Thread.currentThread().name}] getPokemonList")
 
         return Pager(
             config = PagingConfig(
@@ -35,7 +37,7 @@ class PokemonRepositoryImpl @Inject internal constructor(
                 initialLoadSize = PokemonApi.PAGE_SIZE * 3,
             ),
             pagingSourceFactory = {
-                Log.d("TAG", "[${Thread.currentThread().name}] pagingSourceFactory")
+                //Log.d(TAG, "[${Thread.currentThread().name}] pagingSourceFactory")
                 database.getPokemonDao().getList()
             },
             remoteMediator = PokemonListRemoteMediator(service, database)
@@ -63,12 +65,10 @@ class PokemonRepositoryImpl @Inject internal constructor(
                     val response = service.getPokemon(id)
                     val data = response.body()
                     if (!response.isSuccessful || data == null) {
-//                        Log.d("TAG", "   ${response.raw().request.url}")
                         throw Exception("${response.message()} code: ${response.code()}")
                     }
 
                     dao.insert(data.toDbPokemon())
-
 
                     val dbPokemon = dao.get(id)
                     if (dbPokemon == null || dbPokemon.details == null)
@@ -79,7 +79,7 @@ class PokemonRepositoryImpl @Inject internal constructor(
             emit(Resp(pokemon.toDomainPokemon()))
         }
         catch (ex: Exception) {
-            Log.d("TAG", "getPokemon($id) error: ${ex.message}")
+            Log.d(TAG, "getPokemon($id) error: ${ex.message}")
             emit(Resp(HTTP_ERROR_UNKNOWN))
         }
     }

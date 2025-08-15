@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
+/** Детальная информация по покемону. */
 @Entity(
     tableName = "details",
     foreignKeys = [
@@ -16,6 +17,10 @@ import androidx.room.PrimaryKey
 internal data class PokemonDetails(
     /** Идентификатор. */
     @PrimaryKey val pokemonId: Int,
+
+    /** Ссылка на изображение покемона. */
     val sprite: String,
+
+    /** Типы покемона. */
     val types: String,
 )

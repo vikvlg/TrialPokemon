@@ -16,11 +16,8 @@ import ru.vik.trials.pokemon.data.local.model.PokemonDetails
     ]
 )
 internal abstract class AppDatabase : RoomDatabase() {
-    /** Возвращает объект для работы с персонажами. */
+    /** Возвращает объект для работы с покемонами. */
     abstract fun getPokemonDao(): PokemonDao
-
-//    /** Возвращает объект для работы с аватарами. */
-//    abstract fun getAvatarDao(): AvatarDao
 }
 
 /**

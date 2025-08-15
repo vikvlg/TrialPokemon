@@ -13,12 +13,14 @@ internal interface PokemonApi {
         const val PAGE_SIZE = 20
     }
 
+    /** Возвращает список покемонов. */
     @GET("pokemon")
     suspend fun getPokemonList(
         @Query("offset") offset: Int,
         @Query("limit") limit: Int
     ): Response<PokemonList>
 
+    /** Возвращает детальную информацию по покемону. */
     @GET("pokemon/{id}/")
     suspend fun getPokemon(
         @Path("id")
