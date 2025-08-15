@@ -12,6 +12,7 @@ import ru.vik.trials.pokemon.domain.GetPokemonUseCase
 import ru.vik.trials.pokemon.domain.entities.PokemonDetails
 import javax.inject.Inject
 
+/** ViewModel для детализации по покемону. */
 @HiltViewModel
 class PokemonDetailsViewModel @Inject constructor(
     private val getPokemonUseCase: GetPokemonUseCase
@@ -21,19 +22,23 @@ class PokemonDetailsViewModel @Inject constructor(
         private const val TAG = "PokemonDetailsViewModel"
     }
 
-
+    /** Идентификатор покемона. */
     var id: Int = -1
+
+    /** Имя покемона. */
     val name = ObservableField("")
+
+    /** Дополнительная ифномарция по покемону. */
     val details = ObservableField(PokemonDetails())
 
+    /** Получает деатльную информацию по покемону. */
     fun refresh(id: Int) {
-        Log.d(TAG, "refresh")
         viewModelScope.launch(Dispatchers.IO) {
             getPokemonUseCase(id).collectLatest { resp ->
-                Log.d(TAG, "getPokemonUseCase collect")
+                //Log.d(TAG, "getPokemonUseCase collect")
                 val pokemon = resp.value
                 if (!resp.isSuccess || pokemon == null) {
-                    //name.set("Error: ${resp.error}")
+                    name.set("Error code: ${resp.error}")
                     return@collectLatest
                 }
 

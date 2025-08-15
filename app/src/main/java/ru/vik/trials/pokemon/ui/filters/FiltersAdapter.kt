@@ -6,9 +6,11 @@ import ru.vik.trials.pokemon.ui.common.RecyclerViewHolderHelper
 import ru.vik.trials.pokemon.ui.model.PokemonType
 import javax.inject.Inject
 
+/** Адаптер для списка типов покемонов. */
 class FiltersAdapter @Inject constructor(
 ): RecyclerViewHolderHelper<FiltersViewHolder>() {
 
+    /** Типы покемонов и флаги активности типов. */
     var typeList: MutableMap<PokemonType, Boolean>? = null
 
     /** Индекс выбранного типа. */
@@ -27,25 +29,10 @@ class FiltersAdapter @Inject constructor(
         val type = typeList?.keys?.toList()[position] ?: return
         holder.setType(type)
         holder.setTypeName(type.name)
-        holder.updateSelected(typeList?.get(type) ?: false)
+        holder.setSelected(typeList?.get(type) ?: false)
     }
 
     override fun getItemCount(): Int {
         return typeList?.size ?: 0
-    }
-
-    /**
-     * Выделяет пункт с мелодией.
-     * @param position Индекс мелодии.
-     */
-    fun select(position: Int) {
-        selectedIndex = position
-        getHolderAtPosition(position)?.updateSelected(true)
-
-        for (index in getHolderCount() - 1 downTo 0) {
-            val holder = getHolderAtIndex(index) ?: continue
-            if (position != holder.adapterPosition)
-                holder.updateSelected(false)
-        }
     }
 }

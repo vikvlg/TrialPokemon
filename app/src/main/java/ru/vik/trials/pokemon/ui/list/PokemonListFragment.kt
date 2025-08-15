@@ -37,6 +37,7 @@ import ru.vik.trials.pokemon.ui.common.ItemClickSupport
 import ru.vik.trials.pokemon.ui.model.FilterData
 import javax.inject.Inject
 
+/** Фрагмент со списком покемонов. */
 @AndroidEntryPoint
 class PokemonListFragment
     : Fragment() {
@@ -67,7 +68,7 @@ class PokemonListFragment
                 }
                 else {
                     Log.d(TAG, "new filter data: ${viewModel.filter} -> $filter")
-                    Log.d("TAG", "   filter.typeMap: ${filter.typeMap}")
+                    Log.d("TAG", "   filter.typeMap: ${filter.types}")
                     viewModel.filter = filter
                     viewModel.refresh()
                 }
@@ -81,12 +82,12 @@ class PokemonListFragment
         binding.viewModel = viewModel
         adapter.scope = lifecycleScope
 
+        // Адаптер с футером-подгрузкой данных
         val concatAdapter = adapter.withLoadStateFooter(
             footer = CommonLoadStateAdapter {
                 adapter.retry()
             }
         )
-
         binding.pokemonList.adapter = concatAdapter
         adapter.addLoadStateListener { loadStates ->
             binding.pokemonList.isVisible = loadStates.refresh !is LoadState.Loading
@@ -106,8 +107,8 @@ class PokemonListFragment
             }
         }
 
+        // Обработчик новой порции покемонов
         viewModel.pokemonList.observe(viewLifecycleOwner, Observer<PagingData<Pokemon>> {
-            Log.d(TAG, "pokemonList observe")
             adapter.submitData(lifecycle, it)
         })
 
@@ -138,6 +139,7 @@ class PokemonListFragment
         viewModel.refresh()
     }
 
+    /** Добавляет меню в верхнюю панель. */
     private fun addMenu() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
@@ -187,6 +189,7 @@ class PokemonListFragment
         navController.navigate(R.id.PokemonDetailsFragment, bundleOf(Consts.KEY_POKEMON_ID to id))
     }
 
+    /** Обработчик перехода к фильтрам. */
     private fun doFiltersClick() {
         val navController = NavHostFragment.findNavController(this)
         navController.navigate(R.id.FilterFragment, bundleOf(Consts.KEY_FILTER_DATA to viewModel.filter))

@@ -14,12 +14,14 @@ import ru.vik.trials.pokemon.domain.GetPokemonUseCase
 import ru.vik.trials.pokemon.domain.entities.Pokemon
 import javax.inject.Inject
 
+/** RecyclerView-адаптер для списка покемонов. */
 class PokemonListAdapter @Inject constructor(
     private val getPokemonUseCase: GetPokemonUseCase
-): PagingDataAdapter<Pokemon, PokemonListViewHolder>(POST_COMPARATOR) {
+): PagingDataAdapter<Pokemon, PokemonListViewHolder>(POKEMON_COMPARATOR) {
     companion object {
         private const val TAG = "PokemonListAdapter"
-        val POST_COMPARATOR = object : DiffUtil.ItemCallback<Pokemon>() {
+
+        val POKEMON_COMPARATOR = object : DiffUtil.ItemCallback<Pokemon>() {
             override fun areContentsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean =
                 // TODO: Тут было бы неплохо проверять данные покемонов.
                 oldItem.base.id == newItem.base.id
@@ -51,6 +53,7 @@ class PokemonListAdapter @Inject constructor(
         holder.setSelected(position == searchedItem)
         //holder.updateSprite(null)
 
+        // Если есть детализация, то утсановим изображение
         if (pokemon.details != null) {
             holder.updateSprite(pokemon.details?.sprite)
             return

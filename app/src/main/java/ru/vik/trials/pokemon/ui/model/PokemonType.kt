@@ -1,5 +1,10 @@
 package ru.vik.trials.pokemon.ui.model
 
+/**
+ * Типы покемонов.
+ *
+ * Используется только для фильтров.
+ * */
 enum class PokemonType {
     Normal,
     Fire,

@@ -62,11 +62,11 @@ class PokemonListViewModel @Inject constructor(
         val details = pokemon.details ?: return true
 
         // Если все фильтры выключены, то считаем, что фильтр не установлен
-        if (!filter.typeMap.containsValue(true))
+        if (!filter.types.containsValue(true))
             return true
 
         // Проверим подходит ли покемон под указанные типы
-        for ((type, value) in filter.typeMap) {
+        for ((type, value) in filter.types) {
             if (!value)
                 continue
             val available = (details.types.indexOf(type.name, ignoreCase = true) != -1)

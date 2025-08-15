@@ -4,7 +4,7 @@ import android.util.SparseArray
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
 
-// Обеспечивает доступ к активным ViewHolder в RecyclerView.
+/** Обеспечивает доступ к активным ViewHolder в RecyclerView. */
 abstract class RecyclerViewHolderHelper<VH: RecyclerView.ViewHolder>
     : RecyclerView.Adapter<VH>() {
 

@@ -1,6 +1,5 @@
 package ru.vik.trials.pokemon.ui.common
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -8,6 +7,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import ru.vik.trials.pokemon.databinding.LoadStateFooterViewItemBinding
 
+/** ViewHolder для футера RecyclerView. */
 class CommonLoadStateViewHolder(
     private val binding: LoadStateFooterViewItemBinding,
     retry: () -> Unit
@@ -15,7 +15,6 @@ class CommonLoadStateViewHolder(
 
     init {
         binding.retryButton.setOnClickListener {
-            Log.d("TAG", "retryButton click")
             retry.invoke()
         }
     }

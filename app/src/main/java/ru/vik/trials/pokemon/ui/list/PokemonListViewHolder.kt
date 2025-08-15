@@ -1,7 +1,6 @@
 package ru.vik.trials.pokemon.ui.list
 
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -13,6 +12,7 @@ import kotlinx.coroutines.Job
 import ru.vik.trials.pokemon.databinding.PokemonItemLayoutBinding
 
 
+/** ViewHolder эленментов списка покемонов. */
 class PokemonListViewHolder(
     private val binding: PokemonItemLayoutBinding
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -21,9 +21,13 @@ class PokemonListViewHolder(
             : this(PokemonItemLayoutBinding.inflate(LayoutInflater.from(viewParent.context), viewParent, false))
 
     companion object {
+        /** Цвет по умолчанию рамки карточки покемона. */
         private var DEFAULT_CARD_STROKE_COLOR: Int = -1
+        /** Толщина по умолчанию рамки карточки покемона. */
         private var DEFAULT_CARD_STROKE_WIDTH: Int = -1
+        /** Цвет рамки карточки для выделенного покемона. */
         private var SELECTED_CARD_STROKE_COLOR: Int = -1
+        /** Толщина рамки карточки для выделенного покемона. */
         private var SELECTED_CARD_STROKE_WIDTH: Int = -1
     }
 

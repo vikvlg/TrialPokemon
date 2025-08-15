@@ -19,6 +19,7 @@ import ru.vik.trials.pokemon.domain.entities.PokemonDetails
 import ru.vik.trials.pokemon.ui.common.Consts
 import kotlin.getValue
 
+/** Фрагмент с детализацией по покемону. */
 @AndroidEntryPoint
 class PokemonDetailsFragment : Fragment() {
 
@@ -34,7 +35,7 @@ class PokemonDetailsFragment : Fragment() {
             override fun onPropertyChanged(sender: Observable, propertyId: Int) {
                 val details = (sender as ObservableField<*>).get() as? PokemonDetails ?: return
 
-                // Устаноим изображение покемона
+                // Установим изображение покемона
                 val imageSize = 512
                 Glide.with(binding.root)
                     .load(details.sprite)

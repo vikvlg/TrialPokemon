@@ -8,6 +8,7 @@ import androidx.core.graphics.drawable.toDrawable
 
 /**
  * Устанавливает картинку над текстовым полем.
+ *
  * @param bytes Массив данных изображения.
  * @param resId Ресурс изображение по умолчанию.
  * */

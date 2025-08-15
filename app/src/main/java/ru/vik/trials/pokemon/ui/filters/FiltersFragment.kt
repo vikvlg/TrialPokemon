@@ -1,7 +1,7 @@
 package ru.vik.trials.pokemon.ui.filters
 
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +15,7 @@ import ru.vik.trials.pokemon.ui.common.Consts
 import ru.vik.trials.pokemon.ui.model.FilterData
 import javax.inject.Inject
 
+/** Фрагмент с установкой фильтров для списка покоменов. */
 @AndroidEntryPoint
 class FiltersFragment : Fragment() {
 
@@ -26,11 +27,15 @@ class FiltersFragment : Fragment() {
         binding = FragmentFiltersBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
 
-        val filter = arguments?.getParcelable<FilterData>(Consts.KEY_FILTER_DATA)
-        Log.d("TAG", "FiltersFragment filter: $filter")
+        val filter =
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU)
+            @Suppress("DEPRECATION")
+            arguments?.getParcelable(Consts.KEY_FILTER_DATA)
+        else
+            arguments?.getParcelable(Consts.KEY_FILTER_DATA, FilterData::class.java)
         if (filter != null) {
             viewModel.filter = filter
-            filtersAdapter.typeList = filter.typeMap
+            filtersAdapter.typeList = viewModel.filter.types
         }
 
         binding.typeList.adapter = filtersAdapter
@@ -40,8 +45,6 @@ class FiltersFragment : Fragment() {
 
     override fun onPause() {
         // Сохраним значения фильтров перед завершением фрагмента
-        Log.d("TAG", "filter types: ${viewModel.filter.typeMap}")
-        //Log.d("TAG", "filter: ${viewModel.filter.get()}")
         setFragmentResult(Consts.KEY_FILTER_DATA, bundleOf(Consts.KEY_FILTER_DATA to viewModel.filter))
 
         super.onPause()

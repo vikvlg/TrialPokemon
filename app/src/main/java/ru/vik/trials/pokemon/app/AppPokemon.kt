@@ -9,6 +9,6 @@ class AppPokemon : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        ru.vik.trials.pokemon.data.local.removeAppDatabase(this)
+        //ru.vik.trials.pokemon.data.local.removeAppDatabase(this)
     }
 }
