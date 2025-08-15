@@ -17,6 +17,7 @@ import ru.vik.trials.pokemon.domain.entities.Pokemon
 import ru.vik.trials.pokemon.ui.model.FilterData
 import javax.inject.Inject
 
+/** ViewModel для работы со списком покемонов. */
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
     private val getPokemonListUseCase: GetPokemonListUseCase,
@@ -32,6 +33,7 @@ class PokemonListViewModel @Inject constructor(
     /** Фрагмент имени покемона для поиска. */
     val searchName = ObservableField("")
 
+    /** Критерии фильтра списка покемонов. */
     var filter = FilterData()
 
     /** Получает список покемонов. */
@@ -51,41 +53,28 @@ class PokemonListViewModel @Inject constructor(
                 Log.d(TAG, "getPokemonListUseCase collect")
                 pokemonList.postValue(it)
             }
-
-//            getPokemonListUseCase().cachedIn(viewModelScope).collect {
-//                Log.d("TAG", "[${Thread.currentThread().name}] getPokemonListUseCase.collect")
-//                pokemonList.postValue(it)
-//            }
         }
     }
 
+    /** Фильтр покемонов по установленным в [filter] критериям. */
     private fun filterItem(pokemon: Pokemon): Boolean {
         // Если по покемону не успели получить детализацию, то оставляем его в списке
         val details = pokemon.details ?: return true
 
         // Если все фильтры выключены, то считаем, что фильтр не установлен
-        var allTypeFalse = false
-        for ((_, value) in filter.typeMap) {
-            allTypeFalse = allTypeFalse || value
-        }
-        //Log.d("TAG", "allTypeFalse: $allTypeFalse")
-        //Log.d("TAG", "   filter.typeMap: ${filter.typeMap}")
-        if (!allTypeFalse)
+        if (!filter.typeMap.containsValue(true))
             return true
 
-        // Проверим подходит ли покемон под указанный тип
-        var available = false
+        // Проверим подходит ли покемон под указанные типы
         for ((type, value) in filter.typeMap) {
             if (!value)
                 continue
-            available = (details.types.indexOf(type.name, ignoreCase = true) != -1)
+            val available = (details.types.indexOf(type.name, ignoreCase = true) != -1)
             if (available)
-                break
+                return true
         }
 
-        if (!available)
-            Log.d("TAG", "skip ${pokemon.base.name} type: ${pokemon.details?.types}")
-
-        return available
+        //Log.d(TAG, "skip #${pokemon.base.id} ${pokemon.base.name} type: ${details.types}")
+        return false
     }
 }
