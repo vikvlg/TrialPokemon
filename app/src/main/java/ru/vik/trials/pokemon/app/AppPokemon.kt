@@ -9,6 +9,9 @@ class AppPokemon : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        Thread.setDefaultUncaughtExceptionHandler(AppExceptionHandler())
+
+        // DEBUG: Очистка кеша программы.
         //ru.vik.trials.pokemon.data.local.removeAppDatabase(this)
     }
 }
