@@ -9,7 +9,7 @@ import ru.vik.trials.pokemon.domain.entities.PokemonBase as DomainPokemonBase
 import ru.vik.trials.pokemon.domain.entities.PokemonDetails as DomainPokemonDetails
 
 internal fun DbPokemonBase.toDomainPokemon(): DomainPokemonBase {
-    return DomainPokemonBase(id, name, url)
+    return DomainPokemonBase(id, name)
 }
 
 internal fun DbPokemonDetails.toDomainPokemon(): DomainPokemonDetails {
@@ -19,10 +19,6 @@ internal fun DbPokemonDetails.toDomainPokemon(): DomainPokemonDetails {
 internal fun DbPokemonTuple.toDomainPokemon(): DomainPokemon {
     return DomainPokemon(pokemon.toDomainPokemon(), details?.toDomainPokemon())
 }
-
-//internal fun PokemonList.Pokemon.toDbPokemon(): DbPokemon {
-//    return DbPokemon(id, "", url)
-//}
 
 internal fun ApiPokemonDetails.toDbPokemon(): DbPokemonDetails {
     return DbPokemonDetails(id, sprites.frontDefault ?: "", this.types.joinToString(transform = { it.type.name }))

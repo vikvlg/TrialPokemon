@@ -1,7 +1,10 @@
 package ru.vik.trials.pokemon.domain.entities
 
-open class PokemonBase(
+/** Базовая информация по покемону. */
+class PokemonBase(
+    /** Идентификатор. */
     val id: Int = 0,
+
+    /** Имя. */
     val name: String = "",
-    val url: String = "",
 )
