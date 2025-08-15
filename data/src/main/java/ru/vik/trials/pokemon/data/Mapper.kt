@@ -13,7 +13,7 @@ internal fun DbPokemonBase.toDomainPokemon(): DomainPokemonBase {
 }
 
 internal fun DbPokemonDetails.toDomainPokemon(): DomainPokemonDetails {
-    return DomainPokemonDetails(pokemonId, sprite, types)
+    return DomainPokemonDetails(id = pokemonId, sprite = sprite, stats = stats, types = types)
 }
 
 internal fun DbPokemonTuple.toDomainPokemon(): DomainPokemon {
@@ -21,5 +21,10 @@ internal fun DbPokemonTuple.toDomainPokemon(): DomainPokemon {
 }
 
 internal fun ApiPokemonDetails.toDbPokemon(): DbPokemonDetails {
-    return DbPokemonDetails(id, sprites.frontDefault ?: "", this.types.joinToString(transform = { it.type.name }))
+    return DbPokemonDetails(
+        id,
+        sprites.frontDefault ?: "",
+        stats.joinToString(separator = "\n", transform = { "${it.stat.name} = ${it.value}" }),
+        types.joinToString(separator = "\n", transform = { it.type.name })
+    )
 }

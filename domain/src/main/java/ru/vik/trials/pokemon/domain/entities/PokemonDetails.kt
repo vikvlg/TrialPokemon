@@ -8,6 +8,9 @@ data class PokemonDetails(
     /** Ссылка на изображение. */
     val sprite: String = "",
 
+    /** Список параметров. */
+    val stats: String = "",
+
     /** Список типов. */
     val types: String = "",
 )

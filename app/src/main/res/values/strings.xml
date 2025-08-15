@@ -14,6 +14,7 @@
     <string name="pokemon_list_error">Ошибка</string>
     <string name="pokemon_list_retry">Повторить</string>
 
+    <string name="pokemon_stats">Параметры</string>
     <string name="pokemon_types">Типы</string>
 
     <string name="filter_type_descr">Тип покемонов</string>

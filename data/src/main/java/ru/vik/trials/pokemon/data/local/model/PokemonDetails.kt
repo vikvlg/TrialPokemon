@@ -21,6 +21,9 @@ internal data class PokemonDetails(
     /** Ссылка на изображение покемона. */
     val sprite: String,
 
+    /** Параметры покемона. */
+    val stats: String,
+
     /** Типы покемона. */
     val types: String,
 )
